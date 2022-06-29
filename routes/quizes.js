@@ -48,6 +48,8 @@ router.post('/', auth, [
                 userPostId,
                 user: req.user.id
             });
+            // get rid of user post id and add user name instead. 
+            // add quiz views
             newPublicQuiz.isPublished = "Published";
 
             const salt = await bcrypt.genSalt(10);

@@ -16,4 +16,7 @@ router.get('/', async(req, res) => {
     }
 });
 
+// put requests will transfer over veiw data from the public data 
+// add a patch request for incrementing the view count inside of the public quizes. 
+
 module.exports = router;
