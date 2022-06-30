@@ -33,13 +33,15 @@ router.post('/', auth, [
 
         const { quizName, quizQuestions, isPublished } = req.body;
         const name = await User.findById(req.user.id);
-        console.log(name.name);
+        // console.log(name.name);
         try {
             const newQuiz = new UserQuizData({
                 quizName,
                 quizQuestions,
                 userName: name.name,
                 isPublished,
+                // views,
+                // date,
                 user: req.user.id
             });
 

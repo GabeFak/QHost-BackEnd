@@ -14,16 +14,19 @@ const UserQuizDataSchema = mongoose.Schema({
         required: true
     },
     quizQuestions: {
-        type: Object,
+        type: Array,
         require: true
     },
     isPublished: {
         type: String,
         default: 'Unpublished'
     },
+    views: {
+        type: Number,
+        default: 0
+    },
     date: {
-        type: Date,
-        default: Date.now
+        type: String
     }
 });
 
