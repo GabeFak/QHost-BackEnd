@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs/dist/bcrypt');
+// const bcrypt = require('bcryptjs/dist/bcrypt');
 const auth = require('../middleware/auth');
 const { check, validationResult } = require('express-validator/check');
 const req = require('express/lib/request');
@@ -37,7 +37,7 @@ router.post('/', auth, [
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { quizName, quizQuestions, isPublished } = req.body;
+        const { quizName, quizQuestions, isPublished, _id} = req.body;
         const name = await User.findById(req.user.id);
         //userPostId gets generated in the front end and passed into the state. 
         try {
@@ -46,6 +46,7 @@ router.post('/', auth, [
                 quizQuestions,
                 userName: name.name,
                 isPublished,
+                postId: _id,
                 // views,
                 // date,
                 user: req.user.id
@@ -111,7 +112,7 @@ router.put('/:id', auth, async(req, res) => {
 router.delete('/:id', auth, async(req, res) => {
     try {
         let quiz = await PublicQuizes.findById(req.params.id);
-
+        // console.log(quiz)
         if(!quiz) return res.status(404).json({ msg: "Quiz not found"});
 
         //Make sure user owns quiz

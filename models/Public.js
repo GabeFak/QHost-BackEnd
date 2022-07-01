@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const PublicQuizDataSchema = mongoose.Schema({
+const PublicDataSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users'
@@ -34,22 +34,4 @@ const PublicQuizDataSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('PublicQuizes', PublicQuizDataSchema);
-
-// {
-//     "quizQuestions": {
-//         "Q1": {
-//         "title": "whats 2 + 2?",
-//         "Answer": "4",
-//         "WrongAnswer1": "5",
-//         "WrongAnswer2": "5",
-//         "WrongAnswer3": "5"
-//     },
-//     "Q2": {
-//         "title": "whats 2 + 2?",
-//         "Answer": "4",
-//         "WrongAnswer1": "5",
-//         "WrongAnswer2": "5",
-//         "WrongAnswer3": "5"
-//     }}
-// }
+module.exports = mongoose.model('Public', PublicDataSchema);
