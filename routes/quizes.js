@@ -29,32 +29,34 @@ router.get('/', auth, async(req, res) => { //add async back
 // @access Private
 router.post('/', auth, [
     check('quizName', "Quiz title required").not().isEmpty(),
-    check('quizQuestions', "Quiz quiestions required").not().isEmpty(),
-    check('isPublished', "Quiz is already published").equals('Unpublished')
+    check('quizQuestions', "Quiz quiestions required").not().isEmpty()
+    // check('isPublished', "Quiz is already published").equals('Unpublished')
 ], async(req, res) => {
     const errors = validationResult(req);
         if(!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { quizName, quizQuestions, isPublished, userPostId } = req.body;
-
+        const { quizName, quizQuestions, isPublished } = req.body;
+        const name = await User.findById(req.user.id);
         //userPostId gets generated in the front end and passed into the state. 
         try {
             const newPublicQuiz = new PublicQuizes({
                 quizName,
                 quizQuestions,
+                userName: name.name,
                 isPublished,
-                userPostId,
+                // views,
+                // date,
                 user: req.user.id
             });
             // get rid of user post id and add user name instead. 
             // add quiz views
             newPublicQuiz.isPublished = "Published";
 
-            const salt = await bcrypt.genSalt(10);
+            // const salt = await bcrypt.genSalt(10);
 
-            newPublicQuiz.userPostId = await bcrypt.hash(userPostId, salt);
+            // newPublicQuiz.userPostId = await bcrypt.hash(userPostId, salt);
 
             const publicQuiz = await newPublicQuiz.save();
 
@@ -125,7 +127,9 @@ router.delete('/:id', auth, async(req, res) => {
         console.error(err.message);
         res.status(500).send('Server Error')
     }
-    res.send('Deletes users public post');
+    // res.send('Deletes users public post');
 });
+
+
 
 module.exports = router;

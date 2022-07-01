@@ -6,27 +6,27 @@ const PublicQuizDataSchema = mongoose.Schema({
         ref: 'users'
     },
     userName: {
-        type: String
+        type: String,
+        require: true
     },
     quizName: {
         type: String,
         required: true
     },
     quizQuestions: {
-        type: Object,
+        type: Array,
         require: true
     },
     isPublished: {
         type: String,
         default: 'Unpublished'
     },
-    userPostId: {
-        type: String,
-        required: true
+    views: {
+        type: Number,
+        default: 0
     },
     date: {
-        type: Date,
-        default: Date.now
+        type: String
     }
 });
 
