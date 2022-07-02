@@ -24,10 +24,14 @@ router.post('/', [
     
     const { name, email, password } = req.body;
     try {
+        let userName = await User.findOne({ name });
+            if(userName) {
+                return res.status(400).json({ msg: 'User name is taken'});
+            }
         let user = await User.findOne({ email });
-        if(user) {
-            return res.status(400).json({ msg: 'User already exists'});
-        }
+            if(user) {
+                return res.status(400).json({ msg: 'User already exists'});
+            }
 
         user = new User({
            name, 

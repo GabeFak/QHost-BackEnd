@@ -19,6 +19,21 @@ router.get('/', async(req, res) => {
     }
 });
 
+router.patch('/:id', async(req, res) => {
+    try {
+        let quiz = await Public.find({postId: req.params.id});
+        let newViews = quiz[0].views + 1;
+        quiz = await Public.findByIdAndUpdate(quiz[0]._id,  
+            {
+                views: newViews
+            });
+        res.json(quiz);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
+
 router.post('/', auth, [
     check('quizName', "Quiz title required").not().isEmpty(),
     check('quizQuestions', "Quiz quiestions required").not().isEmpty()
@@ -64,12 +79,8 @@ router.post('/', auth, [
 router.put('/:id', auth, async(req, res) => { 
 
 
-    // const { quizName, quizQuestions, isPublished, user} = req.body;
-    // const name = await User.findById(req.user.id);
+    const { quizName, quizQuestions, isPublished } = req.body;
 
-    // if(user !== name) {
-    //     return res.status(400).json({ msg: 'Not Authorized.'});
-    // };
 
     //build quiz object
     const quizFeilds = {};
@@ -79,17 +90,17 @@ router.put('/:id', auth, async(req, res) => {
 
     try {
 
-        let quiz = await Public.findById(req.params.id);
+        let quiz = await Public.find({postId: req.params.id});
         
 
         if(!quiz) return res.status(404).json({ msg: "Quiz not found"});
 
         //Make sure user owns quiz
-        if(quiz.user.toString() !== req.user.id) {
+        if(quiz[0].user.toString() !== req.user.id) {
             return res.status(401).json({ msg: "Not Authorized"});
         }
 
-        quiz = await Public.findByIdAndUpdate(req.params.id,  
+        quiz = await Public.findByIdAndUpdate(quiz[0]._id,  
         {
             $set: quizFeilds
         },
