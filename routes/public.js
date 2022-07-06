@@ -16,7 +16,7 @@ router.get('/', async(req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
-    }
+    };
 });
 
 router.patch('/:id', async(req, res) => {
@@ -30,8 +30,8 @@ router.patch('/:id', async(req, res) => {
         res.json(quiz);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error')
-    }
+        res.status(500).send('Server Error');
+    };
 });
 
 router.post('/', auth, [
@@ -58,13 +58,6 @@ router.post('/', auth, [
                 // date,
                 user: req.user.id
             });
-            // get rid of user post id and add user name instead. 
-            // add quiz views
-            // newPublicQuiz.isPublished = "Published";
-
-            // const salt = await bcrypt.genSalt(10);
-
-            // newPublicQuiz.userPostId = await bcrypt.hash(userPostId, salt);
 
             const publicQuiz = await newPublicQuiz.save();
 
@@ -73,14 +66,11 @@ router.post('/', auth, [
         } catch (err) {
             console.error(err.message);
             res.status(500).send('Server Error');
-        }
+        };
 });
 
 router.put('/:id', auth, async(req, res) => { 
-
-
     const { quizName, quizQuestions, isPublished } = req.body;
-
 
     //build quiz object
     const quizFeilds = {};
@@ -98,7 +88,7 @@ router.put('/:id', auth, async(req, res) => {
         //Make sure user owns quiz
         if(quiz[0].user.toString() !== req.user.id) {
             return res.status(401).json({ msg: "Not Authorized"});
-        }
+        };
 
         quiz = await Public.findByIdAndUpdate(quiz[0]._id,  
         {
@@ -113,25 +103,20 @@ router.put('/:id', auth, async(req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
-    }
+    };
 });
 
 router.delete('/:id', auth, async(req, res) => {
-
-    
     try {
-        // let quiz = await Public.findById(req.params.id);
         let quiz = await Public.find({postId: req.params.id});
-        // console.log(req.params.id)
         if(!quiz) return res.status(404).json({ msg: "Quiz not found"});
-        // console.log(quiz)
 
         //Make sure user owns quiz
         if(quiz[0].user.toString() !== req.user.id) {
             
             return res.status(401).json({ msg: "Not Authorized"});
-        }
-        console.log('userOwnsThis')
+        };
+
         await Public.findByIdAndRemove(quiz[0]._id);     
 
         res.json({ msg: "Quiz Removed "});
@@ -139,11 +124,7 @@ router.delete('/:id', auth, async(req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
-    }
-    // res.send('Deletes users public post');
+    };
 });
-
-// put requests will transfer over veiw data from the public data 
-// add a patch request for incrementing the view count inside of the public quizes. 
 
 module.exports = router;

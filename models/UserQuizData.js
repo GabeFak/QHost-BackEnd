@@ -31,25 +31,3 @@ const UserQuizDataSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model('UserQuizData', UserQuizDataSchema);
-
-
-
-// {
-//     "quizName": "Quiz1",
-//     "quizQuestions": {
-//         "Q1": {
-//         "title": "whats 2 + 2?",
-//         "Answer": "4",
-//         "WrongAnswer1": "5",
-//         "WrongAnswer2": "5",
-//         "WrongAnswer3": "5"
-//     },
-//     "Q2": {
-//         "title": "whats 2 + 2?",
-//         "Answer": "4",
-//         "WrongAnswer1": "5",
-//         "WrongAnswer2": "5",
-//         "WrongAnswer3": "5"
-//     }},
-//     "isPublished": "Unpublished"
-// }

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 const req = require('express/lib/request');
 
 const User = require('../models/User');
@@ -52,7 +52,7 @@ router.post('/', auth, [
         } catch (err) {
             console.error(err.message);
             res.status(500).send('Server Error');
-        }
+        };
 });
 
 // @route PUT api/userData/:id
@@ -60,6 +60,7 @@ router.post('/', auth, [
 // @access Private
 router.put('/:id', auth, async(req, res) => {
     const { quizName, quizQuestions, isPublished } = req.body;
+
     //build quiz object
     const quizFeilds = {};
     if(quizName) quizFeilds.quizName = quizName;
@@ -74,7 +75,7 @@ router.put('/:id', auth, async(req, res) => {
         //Make sure user owns quiz
         if(quiz.user.toString() !== req.user.id) {
             return res.status(401).json({ msg: "Not Authorized"});
-        }
+        };
 
         quiz = await UserQuizData.findByIdAndUpdate(req.params.id,  
         {
@@ -89,7 +90,7 @@ router.put('/:id', auth, async(req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
-    }
+    };
 });
 
 // @route DELETE api/userData/:id
@@ -104,7 +105,7 @@ router.delete('/:id', auth, async(req, res) => {
         //Make sure user owns quiz
         if(quiz.user.toString() !== req.user.id) {
             return res.status(401).json({ msg: "Not Authorized"});
-        }
+        };
 
         await UserQuizData.findByIdAndRemove(req.params.id);     
 
@@ -113,9 +114,7 @@ router.delete('/:id', auth, async(req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
-    }
+    };
 });
-
-
 
 module.exports = router;

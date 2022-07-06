@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 // const bcrypt = require('bcryptjs/dist/bcrypt');
 const auth = require('../middleware/auth');
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 const req = require('express/lib/request');
 
 const User = require('../models/User');
@@ -12,16 +12,14 @@ const PublicQuizes = require('../models/PublicQuizes');
 // @route  GET api/quizes
 // @desc   Get all public quizes owned by user
 // @access Private
-router.get('/', auth, async(req, res) => { //add async back 
+router.get('/', auth, async(req, res) => {  
     try {  
         const quizes = await PublicQuizes.find({ user: req.user.id }).sort({ date: -1});
-        //filtering goes here (based on selected published quiz to edit)
-        res.json(quizes); //return the FILTERED quiz
+        res.json(quizes);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
-    }
-
+    };
 });
 
 // @route  POST api/quizes
@@ -35,7 +33,7 @@ router.post('/', auth, [
     const errors = validationResult(req);
         if(!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
-        }
+        };
 
         const { quizName, quizQuestions, isPublished, _id} = req.body;
         const name = await User.findById(req.user.id);
@@ -51,13 +49,8 @@ router.post('/', auth, [
                 // date,
                 user: req.user.id
             });
-            // get rid of user post id and add user name instead. 
-            // add quiz views
+
             newPublicQuiz.isPublished = "Published";
-
-            // const salt = await bcrypt.genSalt(10);
-
-            // newPublicQuiz.userPostId = await bcrypt.hash(userPostId, salt);
 
             const publicQuiz = await newPublicQuiz.save();
 
@@ -66,7 +59,7 @@ router.post('/', auth, [
         } catch (err) {
             console.error(err.message);
             res.status(500).send('Server Error');
-        }
+        };
 });
 
 // @route  PUT api/quizes/:id
@@ -74,6 +67,7 @@ router.post('/', auth, [
 // @access Private
 router.put('/:id', auth, async(req, res) => { 
     const { quizName, quizQuestions, isPublished } = req.body;
+
     //build quiz object
     const quizFeilds = {};
     if(quizName) quizFeilds.quizName = quizName;
@@ -88,7 +82,7 @@ router.put('/:id', auth, async(req, res) => {
         //Make sure user owns quiz
         if(quiz.user.toString() !== req.user.id) {
             return res.status(401).json({ msg: "Not Authorized"});
-        }
+        };
 
         quiz = await PublicQuizes.findByIdAndUpdate(req.params.id,  
         {
@@ -103,7 +97,7 @@ router.put('/:id', auth, async(req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
-    }
+    };
 });
 
 // @route  DELETE api/quizes/:id
@@ -118,7 +112,7 @@ router.delete('/:id', auth, async(req, res) => {
         //Make sure user owns quiz
         if(quiz.user.toString() !== req.user.id) {
             return res.status(401).json({ msg: "Not Authorized"});
-        }
+        };
 
         await PublicQuizes.findByIdAndRemove(req.params.id);     
 
@@ -127,10 +121,8 @@ router.delete('/:id', auth, async(req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
-    }
+    };
     // res.send('Deletes users public post');
 });
-
-
 
 module.exports = router;

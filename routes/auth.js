@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs/dist/bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
 const User = require('../models/User');
 
@@ -17,7 +17,7 @@ router.get('/', auth, async(req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
-    }
+    };
 });
 
 // @route POST api/auth
@@ -31,7 +31,7 @@ router.post('/', [
         const errors = validationResult(req);
         if(!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
-        }
+        };
 
         const { email, password } = req.body;
 
@@ -39,13 +39,13 @@ router.post('/', [
             let user = await User.findOne({ email });
         if(!user) {
             return res.status(400).json({ msg: 'Invalid credentials'});
-        }
+        };
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if(!isMatch) {
             return res.status(400).json({ msg: 'Invalid credentials'})
-        }
+        };
 
         const payload = {
             user: {
@@ -65,7 +65,7 @@ router.post('/', [
         } catch (err) {
             console.error(err.message);
             res.status(500).send('Server Error');
-        }
+        };
     }
 );
 
